@@ -601,6 +601,7 @@ static void dinput_fill_caps(struct CapsFlags *caps, long vidpid, uint16_t revis
     if (vidpid == MAKELONG(0x1209, 0x2882))
     {
         uint8_t type = revision >> 8;
+        caps->console_type = santroller;
         switch (revision >> 8)
         {
         case STAGE_KIT:
@@ -1470,10 +1471,10 @@ static void dinput_update(int index)
                 if (report->back)
                     gamepad_state.wButtons |= XINPUT_GAMEPAD_BACK;
 
-                int32_t whammy = (report->whammy << 9) - 32767;
+                int32_t whammy = (report->whammy << 8) - 32767;
                 gamepad_state.sThumbRX = whammy;
                 gamepad_state.sThumbLX = (report->slider ^ 0x80) << 8;
-                gamepad_state.sThumbRY = -((report->tilt - 511) << 8);
+                gamepad_state.sThumbRY = (report->tilt << 8) - 32767;
                 break;
             }
             case rb_guitar:
